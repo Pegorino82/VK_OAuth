@@ -1,0 +1,42 @@
+{% extends 'webim_oauth_vk/base.html' %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block page_title %}
+        Main
+    {% endblock %}
+    {% block styles %}
+        <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    {% endblock %}
+    {% block js %}
+        <script src="{% static 'main/js/mainapp.js' %}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    {% endblock %}
+
+</head>
+<body>
+{% block main_content %}
+    <span>Я подобрал несколько твоих друзей</span>
+    <div id="friends">
+        {% for friend in friends %}
+            <div>
+                <a class="list-group-item list-group-item-action" href="https://vk.com/id{{ friend.friend.id }}" target="_blank">
+                    <img class="rounded-circle" src="{{ friend.photo_50 }}" alt="{{ friend.first_name }} {{ friend.last_name }}">
+                    {{ friend.first_name }} {{ friend.last_name }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <button id="friendsButton">Обновить друзей</button>
+    {% if not friends %}
+        <script>
+            axios.get('http://127.0.0.1:8000/api/list/')
+                .then(getFriendsList);
+        </script>
+    {% endif %}
+{% endblock %}
+</body>
+</html>
